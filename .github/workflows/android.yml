@@ -29,13 +29,11 @@ jobs:
       - name: Install gettext
         run: sudo apt-get install -y gettext
 
-      # PATCH: удаляем проверку версии SDL2 из irr/src/CMakeLists.txt
+      # PATCH: удаляем блок проверки SDL2
       - name: Patch Irrlicht SDL2 version check
         run: |
           cd $GITHUB_WORKSPACE
-          sed -i '/CHECK_SDL_VERSION/d' irr/src/CMakeLists.txt
-          sed -i '/SDL2 is too old/d' irr/src/CMakeLists.txt
-          sed -i '/message(FATAL_ERROR/d' irr/src/CMakeLists.txt
+          perl -i -0pe 's/CHECK_SDL_VERSION\(\)\s*if\(NOT CHECK_SDL_VERSION\)\s*message\(FATAL_ERROR "SDL2 is too old, required is at least 2.0.10!"\)\s*endif\(\)//g' irr/src/CMakeLists.txt
 
       - name: Build SDL2 for Android
         run: |
