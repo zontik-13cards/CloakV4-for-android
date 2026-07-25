@@ -33,7 +33,6 @@ jobs:
         run: |
           export ANDROID_NDK=$ANDROID_NDK_HOME
           cd $GITHUB_WORKSPACE
-          # Используем тег release-2.30.10 (существует)
           git clone --depth 1 --branch release-2.30.10 https://github.com/libsdl-org/SDL.git sdl2-src
           mkdir -p sdl2-build && cd sdl2-build
           cmake ../sdl2-src \
@@ -48,7 +47,7 @@ jobs:
             -DSDL_SENSOR=OFF
           make -j2
           mkdir -p $GITHUB_WORKSPACE/android/native/deps/arm64-v8a/SDL2
-          cp lib/libSDL2.a $GITHUB_WORKSPACE/android/native/deps/arm64-v8a/SDL2/
+          cp libSDL2.a $GITHUB_WORKSPACE/android/native/deps/arm64-v8a/SDL2/
           cp -r ../sdl2-src/include $GITHUB_WORKSPACE/android/native/deps/arm64-v8a/SDL2/
 
       - name: Build native libs
