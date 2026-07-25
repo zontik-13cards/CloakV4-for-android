@@ -29,19 +29,22 @@ jobs:
       - name: Install gettext
         run: sudo apt-get install -y gettext
 
-      # ⬇️ НОВЫЙ ШАГ – собираем libluanti.so
       - name: Build native libs
         run: |
-          cd android/native
-          mkdir -p build && cd build
+          cd $GITHUB_WORKSPACE
+          mkdir -p build-android && cd build-android
           cmake -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake \
                 -DANDROID_ABI=arm64-v8a \
                 -DANDROID_PLATFORM=android-29 \
-                -DCMAKE_BUILD_TYPE=Debug ..
+                -DCMAKE_BUILD_TYPE=Release \
+                -DBUILD_CLIENT=TRUE \
+                -DBUILD_SERVER=FALSE \
+                -DENABLE_SYSTEM_JSONCPP=FALSE \
+                -DENABLE_SYSTEM_GMP=FALSE \
+                ..
           make -j2
-          # Копируем библиотеку туда, где её ждёт Gradle
-          mkdir -p ../deps/lib/arm64-v8a
-          cp libluanti.so ../deps/lib/arm64-v8a/
+          mkdir -p ../android/native/deps/lib/arm64-v8a
+          cp lib/libluanti.so ../android/native/deps/lib/arm64-v8a/
 
       - name: Build APK
         run: |
