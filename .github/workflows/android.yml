@@ -29,6 +29,14 @@ jobs:
       - name: Install gettext
         run: sudo apt-get install -y gettext
 
+      # PATCH: удаляем проверку версии SDL2 из irr/src/CMakeLists.txt
+      - name: Patch Irrlicht SDL2 version check
+        run: |
+          cd $GITHUB_WORKSPACE
+          sed -i '/CHECK_SDL_VERSION/d' irr/src/CMakeLists.txt
+          sed -i '/SDL2 is too old/d' irr/src/CMakeLists.txt
+          sed -i '/message(FATAL_ERROR/d' irr/src/CMakeLists.txt
+
       - name: Build SDL2 for Android
         run: |
           export ANDROID_NDK=$ANDROID_NDK_HOME
@@ -64,7 +72,6 @@ jobs:
                 -DENABLE_SYSTEM_GMP=FALSE \
                 -DSDL2_LIBRARY=$GITHUB_WORKSPACE/android/native/deps/arm64-v8a/SDL2/libSDL2.a \
                 -DSDL2_INCLUDE_DIR=$GITHUB_WORKSPACE/android/native/deps/arm64-v8a/SDL2/include \
-                -DSDL2_VERSION_STRING=2.30.10 \
                 ..
           make -j2
           mkdir -p ../android/native/deps/lib/arm64-v8a
