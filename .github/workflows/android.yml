@@ -3,7 +3,7 @@ name: Build Android APK
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:  # позволяет запустить вручную
+  workflow_dispatch:
 
 jobs:
   build:
@@ -26,11 +26,21 @@ jobs:
           sudo apt-get install -y cmake ninja-build
           echo "y" | sdkmanager "ndk;21.4.7075529"
 
+      - name: Install gettext          # <--- НОВЫЙ ШАГ
+        run: sudo apt-get install -y gettext
+
       - name: Build APK
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: CloakV4-Android
+          path: android/app/build/outputs/apk/debug/*.apk 
+
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
