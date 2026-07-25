@@ -64,6 +64,7 @@ jobs:
                 -DENABLE_SYSTEM_GMP=FALSE \
                 -DSDL2_LIBRARY=$GITHUB_WORKSPACE/android/native/deps/arm64-v8a/SDL2/libSDL2.a \
                 -DSDL2_INCLUDE_DIR=$GITHUB_WORKSPACE/android/native/deps/arm64-v8a/SDL2/include \
+                -DSDL2_VERSION_STRING=2.30.10 \
                 ..
           make -j2
           mkdir -p ../android/native/deps/lib/arm64-v8a
